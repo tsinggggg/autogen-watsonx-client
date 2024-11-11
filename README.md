@@ -15,7 +15,7 @@ This is an autogen>=0.4 extension for watsonx client integration.
 - `pip install --upgrade autogen-agentchat>=0.4 --pre`
 - access to a watsonx.ai instance, setting up environment variables `WATSONX_API_KEY`, one of `WATSONX_SPACE_ID` or `WATSONX_PROJECT_ID`, optionally `WATSONX_URL`"
 
-
+asdf
 ### code snippets
 
 Importing dependencies:
