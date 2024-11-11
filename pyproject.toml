@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "autogen_watsonx_client"
-version = "0.0.2"
+version = "0.0.3.dev1"
 dependencies = [
     "autogen-core>=0.4.0.dev5,<0.5",
     "ibm-watsonx-ai>=1.1.22",
