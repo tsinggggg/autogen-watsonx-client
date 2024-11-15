@@ -75,4 +75,4 @@ async def main() -> None:
 await main()
 ```
 
-Refer to the notebook [here](doc/integration_example.ipynb) for the output.
+Refer to the examples [here](doc/README.md) for more detailed examples.
