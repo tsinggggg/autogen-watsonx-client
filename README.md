@@ -13,7 +13,7 @@ This is an autogen>=0.4 extension for watsonx client integration.
 - create a python environment with version `3.10` or above
 - `pip install --upgrade autogen-watsonx-client`
 - `pip install --upgrade autogen-agentchat>=0.4 --pre`
-- access to a watsonx.ai instance, setting up environment variables `WATSONX_API_KEY`, one of `WATSONX_SPACE_ID` or `WATSONX_PROJECT_ID`, optionally `WATSONX_URL`"
+- access to a watsonx.ai instance, setting up environment variables `WATSONX_API_KEY`, one of `WATSONX_SPACE_ID` or `WATSONX_PROJECT_ID`, optionally `WATSONX_URL`
 
 
 ### code snippets
@@ -75,4 +75,4 @@ async def main() -> None:
 await main()
 ```
 
-Refer to the notebook [here](doc/integration_example.ipynb) for the output.
+Refer to [here](doc/README.md) for more detailed examples.
