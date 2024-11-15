@@ -58,3 +58,41 @@ Total completion tokens: 126
 Duration: 5.75 seconds
 
 ```
+
+- [selector group chat pattern with 2 agents](integration_example_multiagent_selector_agent.ipynb)
+
+```
+---------- user ----------
+What is the weather in New York
+---------- weather_agent ----------
+[FunctionCall(id='chatcmpl-tool-6ec4a0ce4b1341fcbec192e45d49bbb7', arguments='{"city": "New York"}', name='get_weather')]
+[Prompt tokens: 287, Completion tokens: 19]
+---------- weather_agent ----------
+[FunctionExecutionResult(content='The weather in New York is 73 degrees and Sunny.', call_id='chatcmpl-tool-6ec4a0ce4b1341fcbec192e45d49bbb7')]
+---------- weather_agent ----------
+The weather in New York is 73 degrees and Sunny.
+[Prompt tokens: 321, Completion tokens: 13]
+Enter your response:  now tell me how much EUR do i need to exchange for 1000 USD
+---------- User ----------
+now tell me how much EUR do i need to exchange for 1000 USD
+---------- currency_agent ----------
+[FunctionCall(id='chatcmpl-tool-412164c8303046399fdf70fd133b1f7e', arguments='{"base_amount": "1000", "base_currency": "USD", "quote_currency": "EUR"}', name='currency_calculator')]
+[Prompt tokens: 462, Completion tokens: 41]
+---------- currency_agent ----------
+[FunctionExecutionResult(content='909.09 EUR', call_id='chatcmpl-tool-412164c8303046399fdf70fd133b1f7e')]
+---------- currency_agent ----------
+You will need 909.09 EUR to exchange for 1000 USD.
+[Prompt tokens: 504, Completion tokens: 17]
+Enter your response:  ok i am good
+---------- User ----------
+ok i am good
+---------- weather_agent ----------
+TERMINATE
+[Prompt tokens: 460, Completion tokens: 4]
+---------- Summary ----------
+Number of messages: 10
+Finish reason: Text 'TERMINATE' mentioned
+Total prompt tokens: 2034
+Total completion tokens: 94
+Duration: 59.81 seconds
+```
