@@ -3,7 +3,7 @@ from dataclasses import asdict
 
 from autogen_core.base import CancellationToken
 from autogen_core.components import FunctionCall, Image
-from autogen_core.components.models._openai_client import _add_usage
+from autogen_ext.models._openai._openai_client import _add_usage
 from autogen_core.components.tools import Tool, ToolSchema
 from typing_extensions import Unpack
 
@@ -210,7 +210,7 @@ class WatsonXChatCompletionClient(ChatCompletionClient):
         content = text_content if text_content is not None else tool_calls_content
 
         response = CreateResult(
-            finish_reason=choice["finish_reason"],
+            finish_reason=WatsonXChatCompletionClient.convert_finish_reason(choice["finish_reason"]),
             content=content,
             usage=usage,
             cached=False,
@@ -256,3 +256,12 @@ class WatsonXChatCompletionClient(ChatCompletionClient):
         )
 
     # TODO: implement __get_state__ and __set_state__
+
+    FINISH_REASONS = {
+        "tool_calls": "function_calls",
+        "stop": "stop",
+    }
+
+    @staticmethod
+    def convert_finish_reason(wx_finish_reason):
+        return WatsonXChatCompletionClient.FINISH_REASONS[wx_finish_reason]
