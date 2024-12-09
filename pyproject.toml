@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "autogen_watsonx_client"
-version = "0.0.3.dev1"
+version = "0.0.3"
 dependencies = [
     "autogen-core>=0.4.0.dev9,<0.5", # TODO: remove dev tag after release
     "autogen-ext>=0.4.0.dev9,<0.5",
