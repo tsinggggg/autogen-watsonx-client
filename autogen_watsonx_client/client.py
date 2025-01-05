@@ -1,15 +1,15 @@
 from typing import Mapping, Optional, Sequence, Any, Union, AsyncGenerator
 from dataclasses import asdict
 
-from autogen_core.base import CancellationToken
-from autogen_core.components import FunctionCall, Image
-from autogen_ext.models._openai._openai_client import _add_usage
-from autogen_core.components.tools import Tool, ToolSchema
+from autogen_core import CancellationToken
+from autogen_core import FunctionCall, Image
+from autogen_ext.models.openai._openai_client import _add_usage
+from autogen_core.tools import Tool, ToolSchema
 from typing_extensions import Unpack
 
-from autogen_core.components.models import (
+from autogen_core.models import (
     ChatCompletionClient, RequestUsage, LLMMessage, CreateResult, SystemMessage, AssistantMessage, UserMessage,
-    FunctionExecutionResultMessage, ModelCapabilities,
+    FunctionExecutionResultMessage, ModelCapabilities, ModelInfo
 )
 from ibm_watsonx_ai.foundation_models import ModelInference
 
@@ -253,6 +253,15 @@ class WatsonXChatCompletionClient(ChatCompletionClient):
             vision=True,
             function_calling=True,
             json_output=True,
+        )
+
+    @property
+    def model_info(self) -> ModelInfo:
+        return ModelInfo(
+            vision=True,
+            function_calling=True,
+            json_output=True,
+            family="watsonx",
         )
 
     # TODO: implement __get_state__ and __set_state__
