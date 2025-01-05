@@ -24,10 +24,11 @@ Importing dependencies:
 import os
 
 from autogen_agentchat.agents import AssistantAgent
-from autogen_agentchat.task import Console, TextMentionTermination
+from autogen_agentchat.ui import Console
+from autogen_agentchat.conditions import TextMentionTermination
 from autogen_agentchat.teams import RoundRobinGroupChat
-from autogen_watsonx_client.client import WatsonXChatCompletionClient
 from autogen_watsonx_client.config import WatsonxClientConfiguration
+from autogen_watsonx_client.client import WatsonXChatCompletionClient
 ```
 
 Create a watsonx client
