@@ -3,7 +3,6 @@ from dataclasses import asdict
 
 from autogen_core import CancellationToken
 from autogen_core import FunctionCall, Image
-from autogen_ext.models.openai._openai_client import _add_usage
 from autogen_core.tools import Tool, ToolSchema
 from typing_extensions import Unpack
 
@@ -14,6 +13,13 @@ from autogen_core.models import (
 from ibm_watsonx_ai.foundation_models import ModelInference
 
 from autogen_watsonx_client.config import WatsonxClientConfiguration
+
+
+def _add_usage(usage1: RequestUsage, usage2: RequestUsage) -> RequestUsage:
+    return RequestUsage(
+        prompt_tokens=usage1.prompt_tokens + usage2.prompt_tokens,
+        completion_tokens=usage1.completion_tokens + usage2.completion_tokens,
+    )
 
 
 def _autogen_message_to_watsonx_message(message: LLMMessage):
