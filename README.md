@@ -3,16 +3,20 @@ This is an autogen>=0.4 extension for watsonx client integration.
 
 
 ## Disclaimer
-- This is a community extension for the [Autogen](https://github.com/microsoft/autogen) project, specifically for the new [Autogen](https://microsoft.github.io/autogen/0.2/blog/2024/10/02/new-autogen-architecture-preview) architecture. The goal is to support IBM Watsonx.ai hosted LLMs in the Autogen framework.
+- This is a community extension for the [Autogen](https://github.com/microsoft/autogen) project, specifically for the new [Autogen >= 0.4](https://microsoft.github.io/autogen/0.2/blog/2024/10/02/new-autogen-architecture-preview) architecture. The goal is to support IBM Watsonx.ai hosted LLMs in the Autogen framework.
 - This project is still in a very early stage under development, please create issues in this github repo for bug reports.
 - This project is a personal endeavor and is not affiliated with, endorsed by, or connected to any organization/employer in any way. The views, ideas, and opinions expressed in this project are solely my own and do not reflect those of others.
+
+
+## Announcements
+- 2025-01-13: the version requirement on Autogen has been updated to `>=0.4.1`, the integration examples have been updated accordingly, see [here](doc/README.md).
 
 ## Usage
 
 ### Prerequisites
 - create a python environment with version `3.10` or above
 - `pip install --upgrade autogen-watsonx-client`
-- `pip install --upgrade autogen-agentchat>=0.4 --pre`
+- `pip install --upgrade autogen-agentchat>=0.4.1`
 - access to a watsonx.ai instance, setting up environment variables `WATSONX_API_KEY`, one of `WATSONX_SPACE_ID` or `WATSONX_PROJECT_ID`, optionally `WATSONX_URL`
 
 
