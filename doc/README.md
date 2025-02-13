@@ -102,3 +102,20 @@ Transferred to travel_agent, adopting the role of travel_agent immediately.
 ---------- travel_agent ----------
 Your flight has been successfully refunded. If you need any further assistance or have any other travel-related inquiries, feel free to ask. Otherwise, we can consider your travel planning complete. TERMINATE
 ```
+
+- [streaming example](integration_example_streaming.py)
+
+```
+---------- assistant ----------
+[FunctionCall(id='chatcmpl-tool-2c62f8ac45a44aab96332958be772142', arguments='{"query": "AutoGen"}', name='web_search')]
+[Prompt tokens: 0, Completion tokens: 0]
+---------- assistant ----------
+[FunctionExecutionResult(content='AutoGen is a programming framework for building multi-agent applications.', call_id='chatcmpl-tool-2c62f8ac45a44aab96332958be772142', is_error=False)]
+---------- assistant ----------
+AutoGen is a programming framework for building multi-agent applications.
+---------- Summary ----------
+Number of inner messages: 2
+Total prompt tokens: 0
+Total completion tokens: 0
+Duration: 0.75 seconds
+```

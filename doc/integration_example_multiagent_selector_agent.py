@@ -8,7 +8,7 @@
 # ### prerequisites
 # 
 # - pip install --upgrade autogen-watsonx-client
-# - pip install --upgrade autogen-agentchat>=0.4.1
+# - pip install --upgrade autogen-agentchat>=0.4.6
 # - access to a watsonx.ai instance, setting up environment variables `WATSONX_API_KEY`, one of `WATSONX_SPACE_ID` or `WATSONX_PROJECT_ID`, optionally `WATSONX_URL`
 
 # ### this is an example usage of the selector group chat pattern with 2 agents

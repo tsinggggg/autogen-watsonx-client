@@ -1,3 +1,4 @@
+import asyncio
 from typing import Mapping, Optional, Sequence, Any, Union, AsyncGenerator
 from dataclasses import asdict
 
@@ -237,7 +238,99 @@ class WatsonXChatCompletionClient(ChatCompletionClient):
         cancellation_token: Optional[CancellationToken] = None,
     ) -> AsyncGenerator[Union[str, CreateResult], None]:
 
-        raise NotImplementedError("Streaming for watsonx client is not implemented in this extension yet, stay tuned.")
+        # TODO: support extra_create_args
+        if extra_create_args:
+            raise ValueError("extra_create_args is not supported for Watsonx client")
+        if json_output is not None:
+            raise ValueError("Watsonx client only supports json format output, do not provide `json_output`")
+
+        # convert messages
+        wx_messages = []
+        for m in messages:
+            converted_msg = _autogen_message_to_watsonx_message(m)
+            if isinstance(converted_msg, list):
+                wx_messages.extend(converted_msg)
+            else:
+                wx_messages.append(converted_msg)
+        # convert tools
+        converted_tools = [_autogen_tool_to_watsonx_tool(tool) for tool in tools]
+        # TODO: handle cancellation_token
+
+        stream_future = asyncio.ensure_future(
+            self._client.achat_stream(
+            messages=wx_messages,
+            tools=converted_tools
+            )
+        )
+
+        stream = await stream_future
+
+        # keep track of results from the chunks for the final CreateResult to yield
+        contents = []
+        full_tool_calls: dict[int, FunctionCall] = {}
+
+        while True:
+            try:
+                chunk_future = asyncio.ensure_future(anext(stream))
+                chunk = await chunk_future
+
+                choice = chunk["choices"][0]
+
+                # First try to get content (content could be empty string, especially the first delta)
+                if "content" in choice["delta"]:
+                    content = choice["delta"]["content"]
+                    if len(content) > 0:
+                        contents.append(content)
+                        yield content
+                    continue
+
+                # Otherwise, get tool calls
+                if "tool_calls" in choice["delta"]:
+                    tool_calls = choice["delta"]["tool_calls"]
+                    # when does tool_calls contain more than 1 item? it seems even when there are 2 func calls in one turn, they get generated sequentially
+                    for tool_call_chunk in tool_calls:
+                        idx = tool_call_chunk["index"]
+                        if idx not in full_tool_calls:
+                            full_tool_calls[idx] = FunctionCall(id="", arguments="", name="")
+
+                        if "id" in tool_call_chunk:
+                            full_tool_calls[idx].id += tool_call_chunk["id"]
+
+                        if "function" in tool_call_chunk:
+                            function = tool_call_chunk["function"]
+                            if "name" in function:
+                                full_tool_calls[idx].name += function["name"]
+                            if "arguments" in function:
+                                full_tool_calls[idx].arguments += function["arguments"]
+                # TODO: handle logprobs
+
+            except StopAsyncIteration:
+                break
+
+        content: Union[str, list[FunctionCall]]
+        if len(contents) > 0:
+            content = "".join(contents)
+        else:
+            content = list(full_tool_calls.values())
+
+        # TODO: achat_stream endpoint doesn't seem to return usage at all...
+        usage = RequestUsage(
+            prompt_tokens=0,
+            completion_tokens=0,
+        )
+
+        result = CreateResult(
+            finish_reason=WatsonXChatCompletionClient.convert_finish_reason(choice["finish_reason"]),
+            content=content,
+            usage=usage,
+            cached=False,
+            # TODO: logprobs and thought
+        )
+
+        self._total_usage = _add_usage(self._total_usage, usage)
+        self._actual_usage = _add_usage(self._actual_usage, usage)
+
+        yield result
 
     def actual_usage(self) -> RequestUsage:
         return self._actual_usage
