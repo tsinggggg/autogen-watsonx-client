@@ -9,6 +9,7 @@ This is an autogen>=0.4 extension for watsonx client integration.
 
 
 ## Announcements
+- 2025-02-13: `create_stream` is now implemented!
 - 2025-01-13: the version requirement on Autogen has been updated to `>=0.4.1`, the integration examples have been updated accordingly, see [here](doc/README.md).
 
 ## Usage
