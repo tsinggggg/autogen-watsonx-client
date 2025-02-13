@@ -1,4 +1,4 @@
 from autogen_watsonx_client.config import WatsonxClientConfiguration
 from autogen_watsonx_client.client import WatsonXChatCompletionClient
 
-__version = "0.0.6.dev1"
+__version = "0.0.7.dev1"
