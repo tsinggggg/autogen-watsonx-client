@@ -17,9 +17,9 @@
 import os
 import asyncio
 from autogen_agentchat.agents import AssistantAgent
+from autogen_agentchat.messages import TextMessage
 from autogen_agentchat.ui import Console
-from autogen_agentchat.conditions import TextMentionTermination
-from autogen_agentchat.teams import RoundRobinGroupChat
+from autogen_core import CancellationToken
 from autogen_watsonx_client.config import WatsonxClientConfiguration
 from autogen_watsonx_client.client import WatsonXChatCompletionClient
 
@@ -41,33 +41,42 @@ wx_client = WatsonXChatCompletionClient(**wx_config)
 # In[3]:
 
 
-# Define a tool
-async def get_weather(city: str) -> str:
-    return f"The weather in {city} is 73 degrees and Sunny."
+# Define a tool that searches the web for information.
+async def web_search(query: str) -> str:
+    """Find information on the web"""
+    return "AutoGen is a programming framework for building multi-agent applications."
 
 
-async def main() -> None:
-    # Define an agent
-    weather_agent = AssistantAgent(
-        name="weather_agent",
-        model_client=wx_client,
-        tools=[get_weather],
+# Define an agent
+agent = AssistantAgent(
+    name="assistant",
+    model_client=wx_client,
+    tools=[web_search],
+    system_message="Use tools to solve tasks.",
+    model_client_stream=True,
+)
+
+
+async def assistant_run_stream() -> None:
+    # Option 1: read each message from the stream (as shown in the previous example).
+    # async for message in agent.on_messages_stream(
+    #     [TextMessage(content="Find information on AutoGen", source="user")],
+    #     cancellation_token=CancellationToken(),
+    # ):
+    #     print(message)
+
+    # Option 2: use Console to print all messages as they appear.
+    await Console(
+        agent.on_messages_stream(
+            [TextMessage(content="Find information on AutoGen", source="user")],
+            cancellation_token=CancellationToken(),
+        ),
+        output_stats=True,  # Enable stats printing.
     )
 
-    # Define termination condition
-    termination = TextMentionTermination("TERMINATE")
 
-    # Define a team
-    agent_team = RoundRobinGroupChat([weather_agent], termination_condition=termination)
-
-    # Run the team and stream messages to the console
-    stream = agent_team.run_stream(task="What is the weather in New York?")
-    await Console(stream)
-
-
-# NOTE: if running this inside a Python script you'll need to use asyncio.run(main()).
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(assistant_run_stream())
 
 
 
