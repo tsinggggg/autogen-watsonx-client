@@ -346,6 +346,9 @@ class WatsonXChatCompletionClient(ChatCompletionClient):
         # TODO: any watsonx api to support this?
         return 1
 
+    async def close(self) -> None:
+        await self._client._inference._async_http_client.aclose()
+
     @property
     def capabilities(self) -> ModelCapabilities:
         return ModelCapabilities(

@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "autogen_watsonx_client"
-version = "0.0.7.dev1"
+version = "0.0.7.dev2"
 dependencies = [
-    "autogen-core>=0.4.6",
-    "autogen-ext>=0.4.6",
-    "ibm-watsonx-ai>=1.2.6",
+    "autogen-core>=0.4.9.2",
+    "autogen-ext>=0.4.9.2",
+    "ibm-watsonx-ai>=1.3.1",
 ]
 requires-python = ">=3.10, <3.13"
 description = "This is an autogen>=0.4 extension for watsonx client integration."
