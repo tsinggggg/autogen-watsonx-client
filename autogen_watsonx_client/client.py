@@ -277,9 +277,9 @@ class WatsonXChatCompletionClient(ChatCompletionClient):
                 chunk_future = asyncio.ensure_future(anext(stream))
                 chunk = await chunk_future
 
-                #  If there are no choices in chunk, exit the loop
+                #  Avoid KeyError, go to next iteration
                 if not chunk.get("choices"):
-                    break  
+                    continue
 
                 choice = chunk["choices"][0]
 
