@@ -11,6 +11,7 @@ from autogen_core.models import (
     ChatCompletionClient, RequestUsage, LLMMessage, CreateResult, SystemMessage, AssistantMessage, UserMessage,
     FunctionExecutionResultMessage, ModelCapabilities, ModelInfo
 )
+from ibm_watsonx_ai import Credentials
 from ibm_watsonx_ai.foundation_models import ModelInference
 
 from autogen_watsonx_client.config import WatsonxClientConfiguration
@@ -133,8 +134,10 @@ class WatsonXChatCompletionClient(ChatCompletionClient):
 
         # url
         url = kwargs.pop("url", "https://us-south.ml.cloud.ibm.com")
-        # api key is required
-        api_key = kwargs.pop("api_key")
+        # api key is optional
+        api_key = kwargs.pop("api_key", None)
+        # token if needed
+        token = kwargs.pop("token", None)
         # one of space_id or project_id should be provided
         space_id = kwargs.pop("space_id", None)
         project_id = kwargs.pop("project_id", None)
@@ -146,13 +149,13 @@ class WatsonXChatCompletionClient(ChatCompletionClient):
         # decoding params
         wx_params = dict(kwargs).copy()
 
+        # api_key or token can be used
+        credentials = Credentials(url=url, api_key=api_key, token=token)
+
         # client
         self._client = ModelInference(
             model_id=model_id,
-            credentials={
-                "api_key": api_key,
-                "url": url,
-            },
+            credentials=credentials,
             space_id=space_id,
             project_id=project_id,
             params=wx_params,
@@ -274,6 +277,10 @@ class WatsonXChatCompletionClient(ChatCompletionClient):
                 chunk_future = asyncio.ensure_future(anext(stream))
                 chunk = await chunk_future
 
+                #  Avoid KeyError, go to next iteration
+                if not chunk.get("choices"):
+                    continue
+
                 choice = chunk["choices"][0]
 
                 # First try to get content (content could be empty string, especially the first delta)
@@ -345,6 +352,9 @@ class WatsonXChatCompletionClient(ChatCompletionClient):
     def remaining_tokens(self, messages: Sequence[LLMMessage], tools: Sequence[Tool | ToolSchema] = []) -> int:
         # TODO: any watsonx api to support this?
         return 1
+
+    async def close(self) -> None:
+        await self._client._inference._async_http_client.aclose()
 
     @property
     def capabilities(self) -> ModelCapabilities:
