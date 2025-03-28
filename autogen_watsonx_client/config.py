@@ -26,7 +26,8 @@ class WatsonxCreateArguments(TypedDict, total=False):
 
 class WatsonxClientConfiguration(WatsonxCreateArguments, total=False):
     model_id: str
-    api_key: str
+    api_key: Optional[str]
     url: Optional[str]
     space_id: Optional[str]
     project_id: Optional[str]
+    token: Optional[str]
