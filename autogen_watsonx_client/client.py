@@ -378,6 +378,9 @@ class WatsonXChatCompletionClient(ChatCompletionClient):
     FINISH_REASONS = {
         "tool_calls": "function_calls",
         "stop": "stop",
+        "length": "length",
+        "content_filter": "content_filter",
+        "unknown": "unknown",
     }
 
     @staticmethod
